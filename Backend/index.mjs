@@ -1,17 +1,25 @@
 import express from 'express';
 import fetch  from 'node-fetch';
 import dotenv from 'dotenv';
+import moment from 'moment-timezone';
 dotenv.config();
 
 
 const app = express();
-let apiKey = process.env.KEY;
+const apiKey = process.env.KEY;// varible for the api key
+
+
+
 
 
 app.get('/', async (req, res) => {
   try {
+
+    const newYorkDate = moment().tz("America/New_York").format('YYYY-MM-DD');
+  
+
     // Make API call using node-fetch
-    const response = await fetch(`https://api.polygon.io/v2/aggs/ticker/AAPL/range/1/day/2023-01-09/2023-02-10?adjusted=true&sort=asc&apiKey=${apiKey}`);
+    const response = await fetch(`https://api.polygon.io/v2/aggs/grouped/locale/us/market/stocks/${newYorkDate}?adjusted=true&include_otc=false&apiKey=${apiKey}`);
     const data = await response.json();
     console.log(apiKey)
     // Send the data back to the client
